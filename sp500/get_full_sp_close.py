@@ -3,13 +3,14 @@ import yahoo_fin.options as ops
 import pandas as pd
 from datetime import date
 
+# get today's date
 today = date.today()
 d1 = today.strftime("%m/%d/%y")
 
-# get list of dow tickers
+# get list of s&p500 tickers
 sp_list = si.tickers_sp500()
-#f = open("dict_dow.json", "w")
-# pull data for each dow stock
+
+# pull data for each s&p500 stock and pass any exceptions
 sp_price_data = {}
 for ticker in sp_list:
     try:
@@ -20,12 +21,12 @@ for ticker in sp_list:
     except Exception:
         pass
 
+# clean up the dataframe and update the column names
 combined_stats = pd.concat(sp_price_data)
 combined_stats = combined_stats.reset_index()
-# del combined_stats["level_0"]
-# update column names
 combined_stats.columns = ["Ticker", "Date", "Close"]
+
+# convert the dataframe into a csv file
 combined_stats.to_csv (r'/home/jordysjoint/sp500/export_sp.csv', index = False, header = True)
-#f.write(dow_price_data)
-#f.close()
+
 
